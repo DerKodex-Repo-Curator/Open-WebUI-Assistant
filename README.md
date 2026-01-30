@@ -4,6 +4,7 @@ Open WebUI Assistant
 We made this as a way to connect Open WebUI to chrome and other web-based apps/locations.
 
 Main Site: https://www.graytechnical.com/open-webui-assistant/
+
 Chrome Web Store: https://chromewebstore.google.com/detail/open-webui-assistant/alojhgbfgnfdmclldiecnadgkpifbego
 
 
