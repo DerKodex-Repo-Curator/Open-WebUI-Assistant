@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Open WebUI Assistant Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="url"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .checkbox-group {
+      margin-top: 10px;
+    }
+    .checkbox-group label {
+      display: flex;
+      align-items: flex-start;
+      font-weight: normal;
+      cursor: pointer;
+    }
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 8px;
+      margin-top: 3px;
+      cursor: pointer;
+    }
+    .info-box {
+      background: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .info-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #0066cc;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      display: none;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .test-section {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .test-section h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Open WebUI Assistant Settings</h1>
+
+  <div class="form-group">
+    <label for="baseUrl">Open WebUI Base URL</label>
+    <input type="url" id="baseUrl" placeholder="http://localhost:3000">
+    <div class="hint">Enter the URL where your Open WebUI instance is running (e.g., http://localhost:3000)</div>
+  </div>
+
+  <div class="form-group">
+    <label for="username">Username (Email)</label>
+    <input type="text" id="username" placeholder="your@email.com">
+    <div class="hint">Your Open WebUI login username/email</div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Your password">
+    <div class="hint">Your Open WebUI password</div>
+    
+    <div class="checkbox-group">
+      <label>
+        <input type="checkbox" id="saveLogin" checked>
+        <span>Save login credentials (keep me logged in)</span>
+      </label>
+    </div>
+    <div class="info-box">
+      <strong>How your credentials are stored:</strong>
+      Your username and password are stored locally in your browser using Chrome's synchronized storage API. This data is encrypted by Chrome and synchronized across your devices if sync is enabled. The credentials are only accessible by this extension and are never transmitted to any third party. They are only sent directly to your Open WebUI instance for authentication. You can clear this data at any time by unchecking this option and saving, or by uninstalling the extension.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox" id="inPlaceEditing" checked>
+      Enable in-place editing
+    </label>
+    <div class="hint">When enabled, AI will replace selected text directly on the page instead of showing results in the side panel (does not apply to Summarize, Check Grammar, or Chat)</div>
+  </div>
+
+  <div class="form-group" id="modelSelectionGroup" style="display: none;">
+    <label for="defaultModel">Default Model</label>
+    <select id="defaultModel" disabled>
+      <option value="">Test connection to load models...</option>
+    </select>
+    <div class="hint">Select the AI model to use by default. Test your connection first to load available models.</div>
+  </div>
+
+  <button type="button" id="saveBtn">Save Settings</button>
+
+  <div class="status" id="status"></div>
+
+  <div class="test-section">
+    <h2>Connection Test</h2>
+    <button type="button" id="testBtn">Test Connection</button>
+    <div class="status" id="testStatus"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

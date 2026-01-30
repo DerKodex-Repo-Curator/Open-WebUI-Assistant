@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 15px;
+      padding-top: 55px;
+      background: #f5f5f5;
+    }
+    
+    .status {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 15px;
+      font-size: 13px;
+      z-index: 1000;
+      text-align: center;
+      font-weight: 500;
+      transition: opacity 0.3s ease;
+    }
+    .status.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .status.error {
+      background: #fee;
+      color: #c00;
+      border-bottom: 2px solid #fcc;
+      opacity: 1;
+    }
+    .status.success {
+      background: #efe;
+      color: #060;
+      border-bottom: 2px solid #cfc;
+      opacity: 1;
+    }
+    .status.info {
+      background: #eef;
+      color: #006;
+      border-bottom: 2px solid #ccf;
+      opacity: 1;
+    }
+    
+    .config-section {
+      background: white;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .config-section h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    select, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .output-container {
+      position: relative;
+      background: white;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    
+    .output-header h3 {
+      font-size: 14px;
+      margin: 0;
+    }
+    
+    .output-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .small-button {
+      width: auto;
+      padding: 6px 12px;
+      margin: 0;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .tts-button {
+      background: #28a745;
+    }
+    
+    .tts-button:hover {
+      background: #218838;
+    }
+    
+    .tts-button:disabled {
+      background: #6c757d;
+    }
+    
+    .tts-button.playing {
+      background: #dc3545;
+    }
+    
+    .tts-button.playing:hover {
+      background: #c82333;
+    }
+    
+    .copy-button {
+      background: #17a2b8;
+    }
+    
+    .copy-button:hover {
+      background: #138496;
+    }
+    
+    #output {
+      word-wrap: break-word;
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 150px;
+    }
+    #output.empty {
+      color: #999;
+      font-style: italic;
+      white-space: pre-wrap;
+    }
+    
+    /* Markdown formatting */
+    #output h1, #output h2, #output h3 {
+      margin: 16px 0 8px 0;
+      font-weight: bold;
+    }
+    #output h1 { font-size: 20px; }
+    #output h2 { font-size: 18px; }
+    #output h3 { font-size: 16px; }
+    #output p { margin: 8px 0; }
+    #output strong { font-weight: bold; }
+    #output em { font-style: italic; }
+    #output code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #d63384;
+    }
+    #output pre {
+      background: #f4f4f4;
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+    }
+    #output pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 12px;
+    }
+    #output ul, #output ol {
+      margin: 8px 0;
+      padding-left: 24px;
+    }
+    #output li { margin: 4px 0; }
+    #output blockquote {
+      border-left: 3px solid #007bff;
+      padding-left: 12px;
+      margin: 12px 0;
+      color: #555;
+      font-style: italic;
+    }
+    #output hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 16px 0;
+    }
+    #output a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    #output a:hover {
+      text-decoration: underline;
+    }
+    #output del {
+      text-decoration: line-through;
+      color: #888;
+    }
+    
+    .chat-section {
+      background: white;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    #chatHistory {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #fafafa;
+      border-radius: 4px;
+    }
+    .chat-message {
+      margin-bottom: 10px;
+      padding: 8px;
+      padding-right: 120px;
+      border-radius: 4px;
+      position: relative;
+    }
+    .chat-message.user {
+      background: #e3f2fd;
+      text-align: right;
+      padding-right: 8px;
+    }
+    .chat-message.assistant {
+      background: #f5f5f5;
+    }
+    .chat-message strong {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 4px;
+      color: #666;
+      font-weight: bold;
+    }
+    
+    .chat-buttons {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 4px;
+    }
+    
+    .chat-btn {
+      width: auto;
+      padding: 4px 8px;
+      margin: 0;
+      font-size: 11px;
+      border-radius: 3px;
+    }
+    
+    .chat-tts-btn {
+      background: #28a745;
+    }
+    
+    .chat-tts-btn:hover {
+      background: #218838;
+    }
+    
+    .chat-tts-btn.playing {
+      background: #dc3545;
+    }
+    
+    .chat-copy-btn {
+      background: #17a2b8;
+    }
+    
+    .chat-copy-btn:hover {
+      background: #138496;
+    }
+    
+    .message-content {
+      text-align: left;
+      line-height: 1.5;
+    }
+    .message-content p { margin: 4px 0; }
+    .message-content code {
+      background: #e8e8e8;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    }
+    .message-content pre {
+      background: #e8e8e8;
+      padding: 8px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+    .message-content pre code {
+      background: none;
+      padding: 0;
+    }
+    .message-content strong {
+      font-weight: bold;
+      display: inline;
+      font-size: inherit;
+      margin: 0;
+      color: inherit;
+    }
+    .message-content ul, .message-content ol {
+      margin: 4px 0;
+      padding-left: 20px;
+    }
+    .message-content li { margin: 2px 0; }
+    .message-content blockquote {
+      border-left: 2px solid #007bff;
+      padding-left: 8px;
+      margin: 8px 0;
+      color: #555;
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="statusBar" class="status hidden"></div>
+
+  <div class="config-section">
+    <h3>Model Selection</h3>
+    <select id="modelSelect">
+      <option value="">Loading models...</option>
+    </select>
+    <button id="refreshModels">Refresh Models</button>
+  </div>
+
+  <div class="output-container">
+    <div class="output-header">
+      <h3>Output</h3>
+      <div class="output-buttons">
+        <button id="copyFormatted" class="small-button copy-button hidden" title="Copy with formatting">
+          📋 Copy HTML
+        </button>
+        <button id="copyPlain" class="small-button copy-button hidden" title="Copy plain text">
+          📄 Copy Text
+        </button>
+        <button id="ttsButton" class="small-button tts-button hidden" title="Read aloud">
+          <span id="ttsIcon">🔊</span>
+          <span id="ttsText">Speak</span>
+        </button>
+      </div>
+    </div>
+    <div id="output" class="empty">Results will appear here...</div>
+  </div>
+
+  <div class="chat-section" id="chatSection">
+    <h3>Chat with AI</h3>
+    <div id="chatHistory"></div>
+    <textarea id="chatInput" rows="3" placeholder="Ask the AI anything..."></textarea>
+    <button id="sendChat">Send</button>
+    <button id="clearChat" style="background: #6c757d; margin-top: 5px;">Clear Chat</button>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

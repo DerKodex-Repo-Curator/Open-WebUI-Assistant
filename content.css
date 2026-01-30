@@ -1,0 +1,82 @@
+/* Floating menu styles */
+.openwebui-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+  z-index: 999999;
+  font-family: Arial, sans-serif;
+  min-width: 160px;
+}
+
+.openwebui-menu.hidden {
+  display: none;
+}
+
+.openwebui-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+
+.openwebui-menu-item:hover {
+  background: #f0f0f0;
+}
+
+.openwebui-menu-item:active {
+  background: #e0e0e0;
+}
+
+/* Loading indicator */
+.openwebui-loading {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #007bff;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 999999;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  animation: fadeIn 0.3s;
+}
+
+/* Notification */
+.openwebui-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 999999;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  animation: fadeIn 0.3s;
+  max-width: 300px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
